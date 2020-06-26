@@ -196,7 +196,7 @@ h2 a {
   </style>
   
 <ul>
-  <li><a  href="main.html">Main</a></li>
+  <li><a  onClick="main_htmlFun()">Main</a></li>
   <li><a class="active">Calibration</a></li>
 </ul>
 
@@ -220,6 +220,7 @@ h2 a {
     </div>
     
     <div class="column middle">
+      <p>Connection status: <span id="status"></span></p>
         <video width="620" height="400" controls>
           <source src="movie.mp4" type="video/mp4">
         </video> 
@@ -264,7 +265,7 @@ h2 a {
     
   
   </div>
-    
+<script src="build/roslib.js"></script>
 <script src="calibration.js"></script>
 </body>
 </html>

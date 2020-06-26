@@ -31,6 +31,7 @@ body {margin:0;}
 }
 
 /* Responsive layout - makes the three columns stack on top of each other instead of next to each other */
+
 @media screen and (max-width: 600px) {
   .column.side, .column.middle {
     width: 100%;
@@ -80,6 +81,10 @@ li a:hover {
 
 <style>
 
+input {
+  width: 40%;
+}
+
 /*	
 	Side Navigation Menu V2, RWD
 	===================
@@ -92,6 +97,171 @@ li a:hover {
 
  @charset "UTF-8";
 @import url(https://fonts.googleapis.com/css?family=Open+Sans:300,400,700);
+
+/* Onto the styling now */
+
+html, body {
+	width: 100%; height: 100%;
+	box-sizing: border-box;
+	font-family: Verdana;
+	
+	background: radial-gradient(
+		center 50px,
+		white,
+		#cdd5ff
+	);
+}
+
+body {
+	padding: 50px 0;
+}
+
+/*
+Time for some gloss and other fancy stuff.
+*/
+
+#compass {
+	width: 200px; height: 200px;
+	border-radius: 50%;
+	margin: 0 auto;
+	position: relative;
+	
+	border: 10px solid #777;
+	
+	background: radial-gradient(
+		ellipse cover,
+		white,
+		#A3E2FC
+	);
+	
+	box-shadow:
+		0 0 4px #000,
+		0 0 1px 8px #ccc,
+		5px 10px 15px #48436f;
+}
+
+/* A bit of animation on hover would be nice too! */
+
+
+#compass:before {
+	content: '';
+	
+	border: 2px dashed #444;
+	position: absolute;
+	left: 10px; right: 10px;
+	bottom: 10px; top: 10px;
+	
+	border-radius: 50%;
+}
+
+#compass:after {
+	content: '';
+	
+	position: absolute;
+	left: -10px; right: -10px;
+	bottom: -10px; top: -10px;
+	
+	border-radius: 50%;
+	
+	background: linear-gradient(
+		-45deg,
+		rgba(255,255,255,0.9) 0%,
+		rgba(255,255,255,0.3) 47%,
+		rgba(255,255,255,0) 48%,
+		rgba(255,255,255,0) 100%
+	);
+}
+
+
+/* neat! lets position the directions now - N E S W */
+
+#compass span {
+	position: absolute;
+	font-weight: bold;
+}
+
+/* North */
+#compass span:nth-child(1) {
+	left: 95px; top: 20px;
+}
+/* South */
+#compass span:nth-child(3) {
+	left: 95px; bottom: 20px;
+}
+
+/* East */
+#compass span:nth-child(2) {
+	right: 25px; top: 90px;
+}
+/* West */
+#compass span:nth-child(4) {
+	left: 25px; top: 90px;
+}
+
+
+/* Next up, is the pointer */
+
+/* A bit of CSS3 animations on the pointer would be nice */
+@keyframes rotate {
+	from { transform: rotate(20deg); }
+	to { transform: rotate(240deg); }
+}
+
+#pointer {
+	width: 60px; height: 30px;
+	
+	/* Centering it */
+	position: relative;
+	left: 50%; top: 50%;
+	margin-left: -30px; margin-top: -15px;
+	
+	/*background: black;*/
+	animation: rotate 5s cubic-bezier(1,.2,.5,1) infinite alternate;
+}
+
+/* Now the trick i wanna use to create a diamond
+shaped pointer is to skew the #pointer
+
+But for some reason that did'nt work hence I did it
+on #pointer:before */
+
+#pointer:before {
+	content: '';
+	
+	position: absolute;
+	left: 0; right: 0;
+	top: 0; bottom: 0;
+	
+	background: linear-gradient(
+		-63deg,
+		rgba(79,188,242,1) 1%,
+		rgba(26,110,206,1) 50%,
+		rgba(216,216,216,1) 51%,
+		rgba(244,94,80,1) 53%,
+		rgba(255,45,45,1) 100%
+	);
+	
+	transform: skewX(60deg);
+}
+
+/* Looks good, lets make the pointer's joint now */
+
+#pointer:after {
+	content: '';
+	
+	width: 10px; height: 10px;
+	background: #4781c0;
+	border-radius: 50%;
+	box-shadow:
+		inset 0 0 4px 2px #4d4d4d,
+		0 0 5px 1px white;
+	
+	/* centering it */
+	position: absolute;
+	left: 50%; top: 50%;
+	margin-left: -5px; margin-top: -5px;
+}
+
 
 body {
   font-family: 'Open Sans', sans-serif;
@@ -204,6 +374,7 @@ h2 a {
 
 </style>
 
+
 <style>
   .grid-container {
     display: grid;
@@ -236,11 +407,16 @@ h2 a {
   </style>
 <ul>
   <li><a class="active" href="#home">Main</a></li>
-  <li><a href="calibration.html">Calibration</a></li>
+  <li><a onClick="calibration_html()">Calibration</a></li>
 </ul>
+
+
 
 <div class="row">
     <div class="column side">
+      <label for="fname">IP Address</label>
+      <input type="text" id="ip_address" name="fname">
+      <button class="button" onclick="setIP()">Connect</button> 
         <table class="container">
             <thead>
                 <tr>
@@ -252,47 +428,44 @@ h2 a {
             <tbody>
                 <tr>
                     <td>Flight Mode</td>
-                    <td>9518</td>
+                    <td><span id="mode"></span></td>
                 </tr>
+
                 <tr>
-                    <td>Battery</td>
-                    <td>7326</td>
-                    
-                </tr>
+                    <td>Motor Status</td>
+                    <td><span id="motor_status"></td>
+
+                      <tr>
+                        <td>Lidar Range</td>
+                        <td><span id="lidar"></td>
+                       
+                    </tr>
                 <tr>
                     <td>Altitude</td>
-                    <td>4162</td>
+                    <td><span id="altitude"></span></td>
                 
                 </tr>
-            <tr>
-                    <td>Hearthbeat</td>
-                    <td>3654</td>
-                   
-                </tr>
+           
             <tr>
                     <td>Latitude</td>
-                    <td>2002</td>
+                    <td><span id="latitude"></span></td>
                     
             <tr>
                     <td>Longitude</td>
-                    <td>4623</td>
+                    <td><span id="longitude"></span></td>
                    
                 </tr>
-        <tr>
-                    <td>Flight Time</td>
-                    <td>4623</td>
-                   
-                </tr>
+       
             </tbody>
         </table>
 
     </div>
     
     <div class="column middle">
+      <p>Connection status: <span id="status"></span></p>
       <video width="640" height="480" controls>
         <source src="movie.mp4" type="video/mp4">
       </video>
-      <h2> Live Streaming</h1>
     </div>
     
     <div class="column side2">
@@ -310,9 +483,19 @@ h2 a {
         <div class="grid-item">
           <button class="button">Save Parameter</button> 
         </div>
+        <!-- <div id="compass">
+          <span>N</span>
+          <span>E</span>
+          <span>S</span>
+          <span>W</span>
+          <div id="pointer"></div>
+        </div> -->
     </div>
   </div>
-    
+
+<script src="build/roslib.js"></script>
 <script src="main.js"></script>
+
+
 </body>
 </html>
